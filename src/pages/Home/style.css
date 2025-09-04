@@ -1,0 +1,38 @@
+img {
+	margin-bottom: 1.5rem;
+}
+
+img:hover {
+	filter: drop-shadow(0 0 2em #673ab8aa);
+}
+
+section {
+	margin-top: 5rem;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	column-gap: 1.5rem;
+}
+
+.resource {
+	padding: 0.75rem 1.5rem;
+	border-radius: 0.5rem;
+	text-align: left;
+	text-decoration: none;
+	color: var(--text-color);
+	background-color: var(--card-background);
+	border: 1px solid var(--border-color);
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.resource:hover {
+	border: 1px solid var(--color-primary);
+	box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+@media (max-width: 639px) {
+	section {
+		margin-top: 5rem;
+		grid-template-columns: 1fr;
+		row-gap: 1rem;
+	}
+}
