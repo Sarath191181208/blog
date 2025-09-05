@@ -1,5 +1,7 @@
 import { toChildArray } from "preact"
 import { useState } from "preact/hooks"
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
+import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism"
 import "./style.css"
 
 interface CodeOutputProps {
@@ -10,7 +12,7 @@ export function CodeOutput({ children }: CodeOutputProps) {
   return <>{children}</>
 }
 
-export function Code({ children }: { children: string }) {
+export function Code({ children, language }: { children: string; language: string }) {
   return (
     <div className="code-panel">
       <div className="panel-header">
@@ -22,9 +24,9 @@ export function Code({ children }: { children: string }) {
         </div>
       </div>
       <div className="code-content">
-        <pre>
-          <code>{children}</code>
-        </pre>
+        <SyntaxHighlighter language={language} style={vscDarkPlus}>
+          {children}
+        </SyntaxHighlighter>
       </div>
     </div>
   )
