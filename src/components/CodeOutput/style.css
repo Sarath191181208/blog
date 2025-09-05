@@ -34,8 +34,8 @@
 
 .code-viewer-content {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  min-height: 500px;
+  grid-template-columns: 3fr 2fr;
+  min-height: 240px;
 }
 
 .code-panel,
@@ -146,6 +146,10 @@
 .code-content code {
   color: #d4d4d4;
   background: none;
+}
+
+.output-content pre {
+  margin: 0.5em 0;
 }
 
 .code-viewer-navigation {
