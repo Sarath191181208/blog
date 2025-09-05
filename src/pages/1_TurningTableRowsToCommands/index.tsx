@@ -16,7 +16,7 @@ function App() {
   return (
     <CodeOutputViewer>
       <CodeOutput title="Hello World">
-        <Code>
+        <Code language='javascript'>
           {`function greet(name) {
   return \`Hello, \${name}!\`;
 }
@@ -28,7 +28,7 @@ console.log(message);`}
       </CodeOutput>
 
       <CodeOutput title="Array Methods">
-        <Code>
+        <Code language="javascript">
           {`const numbers = [1, 2, 3, 4, 5];
 
 const doubled = numbers.map(n => n * 2);
@@ -42,7 +42,7 @@ Sum: 30`}</Output>
       </CodeOutput>
 
       <CodeOutput title="Object Destructuring">
-        <Code>
+        <Code language="javascript">
           {`const person = {
   name: "Alice",
   age: 30,
