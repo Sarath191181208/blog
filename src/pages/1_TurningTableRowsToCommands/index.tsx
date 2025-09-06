@@ -1,62 +1,45 @@
 import { Code, CodeOutput, CodeOutputViewer, Output } from '../../components/CodeOutput';
-import { Page } from '../../components/Page';
+import { Page, PageTitle } from '../../components/Page';
+import { Tldr } from '../../components/Tldr';
+import { Intro } from '../../components/Intro';
 
 export function TurningTableRowsToCommands() {
   return (
     <Page>
-      <h1>Turning Table Rows To Commands</h1>
+      <PageTitle>
+        Turning Rows into actionalbe elements in console
+      </PageTitle>
+      <PageTLDRSection />
+      <PageIntroSection />
       <p>This is a placeholder for the blog post.</p>
-      <App/>
     </Page>
   );
 }
 
+function PageTLDRSection() {
+  return <Tldr>
+    <Code language='bash'>
+      {`
+kubectl get pods
+  | awk 'NR>1 {print $1, $2}' 
+  | xargs -n2 sh -c 'kubectl delete pod "$1" -n "$2"' sh`}
+    </Code>
 
-function App() {
-  return (
-    <CodeOutputViewer>
-      <CodeOutput title="Hello World">
-        <Code language='javascript'>
-          {`function greet(name) {
-  return \`Hello, \${name}!\`;
+    <code>command</code> and then <code>awk</code> to extract, <code>xargs</code> to apply you args and <code>sh -c</code> to reorder you args
+
+  </Tldr>
 }
 
-const message = greet("World");
-console.log(message);`}
-        </Code>
-        <Output>{`Hello, World!`}</Output>
-      </CodeOutput>
-
-      <CodeOutput title="Array Methods">
-        <Code language="javascript">
-          {`const numbers = [1, 2, 3, 4, 5];
-
-const doubled = numbers.map(n => n * 2);
-const sum = doubled.reduce((a, b) => a + b, 0);
-
-console.log("Doubled:", doubled);
-console.log("Sum:", sum);`}
-        </Code>
-        <Output>{`Doubled: [2, 4, 6, 8, 10]
-Sum: 30`}</Output>
-      </CodeOutput>
-
-      <CodeOutput title="Object Destructuring">
-        <Code language="javascript">
-          {`const person = {
-  name: "Alice",
-  age: 30,
-  city: "New York"
-};
-
-const { name, age, ...rest } = person;
-
-console.log(\`\${name} is \${age} years old\`);
-console.log("Rest:", rest);`}
-        </Code>
-        <Output>{`Alice is 30 years old
-Rest: { city: "New York" }`}</Output>
-      </CodeOutput>
-    </CodeOutputViewer>
-  )
+function PageIntroSection() {
+  return <Intro>
+    <h2> Introduction </h2>
+    <p>If you live in the terminal, you've probably run into this:</p>
+    <ul>
+      <li>A command prints a nice table of values</li>
+      <li>You need to copy just one or two columns</li>
+      <li>Then paste them into another command</li>
+    </ul>
+    <p>It's tedious to do by hand, but the shell has tools to automate this beautifully.</p>
+    <p>In this post, we'll start simple (one column) and build up to more complex scenarios (multiple args, reordering, flags, and the infamous <code>sh -c trick</code>).</p>
+  </Intro>
 }
