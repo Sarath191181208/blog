@@ -9,17 +9,16 @@ import { TurningTableRowsToCommands } from './pages/1_TurningTableRowsToCommands
 import { DummyPost } from './pages/2_DummyPost/index.jsx';
 
 export function App() {
-	return (
-		<LocationProvider>
-			<Header />
-			<Router>
-				<Route path="/" component={Home} />
-				<Route path="/turning-table-rows-to-commands" component={TurningTableRowsToCommands} />
-				<Route path="/dummy-post" component={DummyPost} />
-				<Route default component={NotFound} />
-			</Router>
-		</LocationProvider>
-	);
+  return (
+    <LocationProvider>
+      <Router>
+        <Route path="/" component={Home} />
+        <Route path="/turning-table-rows-to-commands" component={TurningTableRowsToCommands} />
+        <Route path="/dummy-post" component={DummyPost} />
+        <Route default component={NotFound} />
+      </Router>
+    </LocationProvider>
+  );
 }
 
 render(<App />, document.getElementById('app'));
