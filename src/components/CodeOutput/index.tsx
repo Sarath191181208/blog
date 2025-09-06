@@ -8,7 +8,7 @@ interface CodeOutputProps {
   title: string
   children: preact.ComponentChildren
 }
-export function CodeOutput({ children }: CodeOutputProps) {
+export function CodeOutput({ children, title }: CodeOutputProps) {
   return <>{children}</>
 }
 
