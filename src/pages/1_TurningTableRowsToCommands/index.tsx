@@ -26,6 +26,10 @@ export function TurningTableRowsToCommands() {
 
 function PageTLDRSection() {
   return <Tldr>
+    <p>
+      When you see a table in the terminal, you don't have to copy-paste by hand.
+      You can <code>awk</code> to pick out columns, <code>xargs</code> to turn them into arguments, and <code>sh -c</code> when you need reordering.
+    </p>
     <Code language='bash'>
       {`
 kubectl get pods
@@ -33,7 +37,9 @@ kubectl get pods
   | xargs -n2 sh -c 'kubectl delete pod "$1" -n "$2"' sh`}
     </Code>
 
-    <code>command</code> and then <code>awk</code> to extract, <code>xargs</code> to apply you args and <code>sh -c</code> to reorder you args
+    <p>
+      Well that's the final trick, don't worry if you don't understand it yet, we will build up to it step by step.
+    </p>
 
   </Tldr>
 }
@@ -55,7 +61,9 @@ function PageIntroSection() {
 function PageExtractingOneColumnSection() {
   return <PageSection>
     <h2> Extracting one column </h2>
-    <p>Let's say you have a table like the following: </p>
+    <p>
+      Suppose we have a toy table of people:
+    </p>
     <CodeOutputViewer>
       <CodeOutput title={'Print the table'}>
         <Code language='bash'>
@@ -95,6 +103,9 @@ awk 'NR>1 {print $3}' `}
         <li> skip the header -{'>'} <code>{`(NR>1)`}</code></li>
         <li>  print the second column -{'>'} <code> {`{print $2}`} </code> </li>
       </ul>
+      <p>
+        Think of <code>awk</code> as a laser cutter: it slices out exactly the columns you want.
+      </p>
     </p>
   </PageSection>
 }
@@ -103,6 +114,7 @@ function PageExtractingMultipleColumnsSection() {
   return (
     <PageSection>
       <h2>Step 2: Extracting Multiple Columns</h2>
+      <p>We can slice out more than one column at once.</p>
       <CodeOutputViewer>
         <CodeOutput title="Extracting Multiple Columns">
           <Code language="bash">
@@ -122,7 +134,9 @@ Carol   Tokyo`}
           </Output>
         </CodeOutput>
       </CodeOutputViewer>
-      <p>You can grab as many columns as you want ($2, $4 = Name + City).</p>
+      <p>
+        Here, <code>$2</code> is Name, <code>$4</code> is City. Easy!
+      </p>
     </PageSection>
   );
 }
@@ -131,7 +145,7 @@ function PageFeedingIntoCommandSection() {
   return (
     <PageSection>
       <h2>Step 3: Feeding into a Command</h2>
-      <p>Let's say we want to use just the names as arguments to another command.</p>
+      <p>Let's say you want to greet each person, by name. We can pipe the names into <code>xargs</code></p>
       <CodeOutputViewer>
         <CodeOutput title="Feeding into a Command">
           <Code language="bash">
@@ -160,9 +174,23 @@ echo 'Hello' 'Alice' 'Bob' 'Carol'
           </Output>
         </CodeOutput>
       </CodeOutputViewer>
-      <p><code>xargs</code> takes the list and appends it to the command.
+      <p>
+        <code>xargs</code> collects items and appends them into the command. Here it converted into the following:
         <br />
-        We ideally want to run a command for each arg we have received, How to do this ?</p>
+        <code>echo 'Hello' 'Alice' 'Bob' 'Carol'</code>
+      </p>
+      <p>
+        That's neat but not quite what we want. We want to greet each person individually, like this:
+        <br />
+        <pre>
+          <code>
+            echo 'Hello' 'Alice'<br />
+            echo 'Hello' 'Bob'<br />
+            echo 'Hello' 'Carol'<br />
+          </code>
+        </pre>
+        Here comes the magic of <code>-n</code> flag in <code>xargs</code>, which we will cover in the next section.
+      </p>
     </PageSection>
   );
 }
@@ -211,6 +239,9 @@ Hello Carol`}
           </Output>
         </CodeOutput>
       </CodeOutputViewer>
+      <p>
+        So <code>-n1</code> = one row at a time, <code>-n2</code> = two per batch, etc.
+      </p>
     </PageSection>
   );
 }
@@ -283,6 +314,9 @@ docker rm --id 789ghi --image
           </Output>
         </CodeOutput>
       </CodeOutputViewer>
+      <p>
+        Notice how <code>$1</code> and <code>$2</code> become the two columns. We're now creating real commands from rows!
+      </p>
     </PageSection>
   );
 }
@@ -358,7 +392,7 @@ kubectl delete pod postgres-1 -n db
 function PageShTrickExplainedSection() {
   return (
     <PageSection>
-      <h2>Step 8: The sh -c Quirk Explained</h2>
+      <h2>Step 7: The sh -c Quirk Explained</h2>
       <p>Why the extra sh at the end?</p>
       <CodeOutputViewer>
         <CodeOutput title="The sh -c Quirk">
@@ -367,9 +401,17 @@ function PageShTrickExplainedSection() {
           </Code>
         </CodeOutput>
       </CodeOutputViewer>
-      <p>sh -c '...' arg0 arg1 arg2 → here, arg0 becomes $0, arg1 becomes $1, etc.</p>
-      <p>Without the dummy sh, your first real arg becomes $0 and disappears.</p>
-      <p>By adding a dummy arg, the real data lines up with $1, $2, …</p>
+      <p>
+        Here's the rule: <code>sh -c 'script' arg0 arg1 arg2</code>
+      </p>
+      <ul>
+        <li><code>arg0</code> becomes <code>$0</code> (usually ignored).</li>
+        <li><code>arg1</code> becomes <code>$1</code>.</li>
+        <li><code>arg2</code> becomes <code>$2</code>.</li>
+      </ul>
+      <p>
+        If we didn't add the extra <code>sh</code>, then our first <b>real</b> argument would slip into <code>$0</code> and vanish. The dummy keeps everything lined up.
+      </p>
     </PageSection>
   );
 }
@@ -378,14 +420,16 @@ function PageShTrickExplainedSection() {
 function PageWrapUpSection() {
   return (
     <PageSection>
-      <h2>Wrap-Up</h2>
+      <h2> Wrap-Up </h2>
       <ul>
-        <li>Use awk to slice table output into the columns you want</li>
-        <li>Pipe into xargs to build commands</li>
-        <li>Use sh -c when you need multiple args, custom ordering, or reuse</li>
-        <li>Always add a dummy arg after the script in sh -c</li>
+        <li><code>awk</code> slices tables into columns.</li>
+        <li><code>xargs</code> turns lists into commands.</li>
+        <li><code>-n</code> controls batching (one row at a time).</li>
+        <li><code>sh -c</code> lets you reorder and reference multiple args.</li>
       </ul>
-      <p>Next time you see a table in your terminal, you'll know how to turn it straight into commands</p>
+      <p>
+       Next time you see a table in your terminal, don't reach for the mouse. Pipe, slice, and command it straight away. That's the Unix way.
+      </p>
     </PageSection>
   );
 }
