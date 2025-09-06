@@ -1,0 +1,6 @@
+.intro-container {
+  font-size: 1.125rem;
+  line-height: 1.7;
+  color: var(--color-muted-foreground);
+  margin-bottom: 2rem;
+}
